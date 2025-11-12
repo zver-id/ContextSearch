@@ -10,7 +10,7 @@ def get_tickets_dict():
 
     closed_until = "({}.{} >= '{}')".format(tickets.reference.TableName,
                                             tickets.reference.Requisites("ДатОткр").FieldName,
-                                            "15.10.2025")  # начало периода
+                                            "25.10.2025")  # начало периода
     tickets.reference.AddWhere(closed_until)
 
     tickets.set_filter("ТипОбращения", ['И', 'К'])
@@ -170,6 +170,17 @@ def clustering():
         for member in members:
             print(f"  ID {member['id']}: {member['text']}")
 
+def long_clustrer():
+
+    clusterer = TicketClusterer()
+    documents_dict = get_tickets_dict()
+    results = clusterer.cluster_long_texts(documents_dict, method="kmeans", n_clusters=30 )
+    clusterer.save_to_word(
+        results=results,
+        filename="результаты_кластеризации.docx",
+        include_full_texts=False,
+        max_text_length=300
+    )
 
 if __name__ == "__main__":
     #get_similarity_description()
@@ -181,4 +192,5 @@ if __name__ == "__main__":
 
     #results = search_engine.search(query, top_k=10)
     #search_engine.print_results(results)
-    clustering()
+    #clustering()
+    long_clustrer()
